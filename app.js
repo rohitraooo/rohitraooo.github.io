@@ -81,11 +81,9 @@ pager.addEventListener("scroll", () => {
 });
 
 // keyboard
-window.addEventListener("keydown", (e) => {
-  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+window.addEventListener("resize", () => {
   const i = currentPageIndex();
-  const next = e.key === "ArrowRight" ? Math.min(i + 1, dots.length - 1) : Math.max(i - 1, 0);
-  scrollToPage(next);
+  pager.scrollTo({ left: i * pager.clientWidth, behavior: "instant" });
 });
 
 // initial
