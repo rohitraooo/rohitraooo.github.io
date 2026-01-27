@@ -1,46 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home</title>
+
+  <!-- Inter for Apple-ish look on Windows/Linux (SF Pro on macOS via -apple-system) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css?v=4" />
+</head>
 <body>
-  <div class="screen" id="screen">
-    <div class="blob"></div>
-    <div class="curve"></div>
 
-    <div class="status">
-      <span>9:41</span>
-      <div class="sig" aria-hidden="true">
-        <span></span><span></span><span></span><span></span>
-      </div>
-      <span class="lte">LTE</span>
-      <div class="battery" aria-hidden="true"><div class="fill"></div></div>
-    </div>
-
-    <div class="side" aria-hidden="true">
-      <div class="stack">
-        <div class="mini"><div class="mini-maps"></div></div>
-        <div class="mini"><div class="mini-music"></div></div>
-        <div class="mini"><div class="mini-gear"></div></div>
-      </div>
-      <div class="home-indicator"></div>
-    </div>
-
-    <div class="pager" id="pager" aria-label="Home pages">
-      <section class="page" aria-label="Page 1">
-        <div class="content">
-          <div class="grid" data-page="1" id="grid-page-1"></div>
+  <!-- LEFT FROSTED STATUS RAIL -->
+  <aside class="status-rail" aria-hidden="true">
+    <div class="status-top">
+      <div class="time" id="time">13:02</div>
+      <div class="net-row">
+        <div class="signal">
+          <span></span><span></span><span></span><span></span>
         </div>
-      </section>
-
-      <section class="page" aria-label="Page 2">
-        <div class="content">
-          <div class="grid" data-page="2" id="grid-page-2"></div>
-        </div>
-      </section>
+        <div class="network">LTE</div>
+      </div>
     </div>
 
-    <div class="dots" role="tablist" aria-label="Pages" id="dots">
-      <button type="button" class="active" aria-label="Go to page 1" aria-selected="true"></button>
-      <button type="button" aria-label="Go to page 2" aria-selected="false"></button>
+    <div class="status-icons">
+      <div class="rail-app maps"></div>
+      <div class="rail-app spotify"></div>
+      <div class="rail-app phone"></div>
     </div>
-  </div>
 
-  <script type="module" src="./apps/apps.js"></script>
-  <script type="module" src="./app.js"></script>
+    <div class="status-bottom">
+      <div class="apps-button"></div>
+    </div>
+  </aside>
+
+  <!-- SWIPEABLE PAGES (injected by app.js) -->
+  <main class="pager" id="pager" aria-label="Home pages"></main>
+
+  <!-- DOTS (injected by app.js) -->
+  <nav class="dots" id="dots" role="tablist" aria-label="Pages"></nav>
+
+  <script type="module" src="./app.js?v=4"></script>
 </body>
+</html>
