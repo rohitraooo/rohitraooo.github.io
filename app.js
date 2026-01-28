@@ -5,11 +5,6 @@ const dotsWrap = document.getElementById("dots");
 const railWrap = document.getElementById("railApps");
 const homeButton = document.getElementById("homeButton");
 
-if (!pager) console.error("[home] Missing #pager element in index.html");
-if (!dotsWrap) console.error("[home] Missing #dots element in index.html");
-if (!railWrap) console.error("[home] Missing #railApps element in index.html");
-if (!homeButton) console.error("[home] Missing #homeButton element in index.html");
-
 const FORCE_MIN_PAGES = 2;
 
 function maxPageFromApps() {
