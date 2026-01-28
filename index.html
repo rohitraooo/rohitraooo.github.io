@@ -5,17 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Home</title>
 
-  <!-- Inter for Apple-ish look on Windows/Linux (SF Pro on macOS via -apple-system) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./styles.css?v=4" />
+  <link rel="stylesheet" href="./styles.css?v=8" />
 </head>
 <body>
 
-  <!-- LEFT FROSTED STATUS RAIL -->
-  <aside class="status-rail" aria-hidden="true">
+  <aside class="status-rail">
     <div class="status-top">
       <div class="time" id="time">13:02</div>
       <div class="net-row">
@@ -26,23 +24,16 @@
       </div>
     </div>
 
-    <div class="status-icons">
-      <div class="rail-app maps"></div>
-      <div class="rail-app spotify"></div>
-      <div class="rail-app phone"></div>
-    </div>
+    <div class="status-icons" id="railApps"></div>
 
     <div class="status-bottom">
-      <div class="apps-button"></div>
+      <button class="apps-button" id="homeButton" type="button" aria-label="Go to page 1"></button>
     </div>
   </aside>
 
-  <!-- SWIPEABLE PAGES (injected by app.js) -->
-  <main class="pager" id="pager" aria-label="Home pages"></main>
+  <main class="pager" id="pager"></main>
+  <nav class="dots" id="dots"></nav>
 
-  <!-- DOTS (injected by app.js) -->
-  <nav class="dots" id="dots" role="tablist" aria-label="Pages"></nav>
-
-  <script type="module" src="./app.js?v=4"></script>
+  <script type="module" src="./app.js?v=8"></script>
 </body>
 </html>
