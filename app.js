@@ -1,11 +1,13 @@
-import { APPS } from "./apps/apps.js?v=8";
+import { APPS } from "./apps/apps.js?v=9";
+
+console.log("[home] app.js v9 loaded");
 
 const pager = document.getElementById("pager");
 const dotsWrap = document.getElementById("dots");
 const railWrap = document.getElementById("railApps");
 const homeButton = document.getElementById("homeButton");
 
-const FORCE_MIN_PAGES = 2;
+const FORCE_MIN_PAGES = 3;
 
 function maxPageFromApps() {
   let max = 1;
@@ -25,6 +27,25 @@ for (let p = 1; p <= maxPage; p++) {
   section.className = "page";
   section.innerHTML = `
     <div class="content">
+      ${p === 1 ? `
+      <div class="widget widget-hero" aria-label="Featured photo">
+        <div class="widget-media">
+          <img src="./icons/me.png" alt="Featured photo" />
+        </div>
+        <div class="widget-label">About Me</div>
+      </div>
+      <div class="projects-widget" id="projectsWidget" aria-label="Projects">
+        <div class="project-stage">
+          <a class="project-card slot-main" href="#" target="_blank" rel="noopener noreferrer" aria-label="Project"></a>
+          <a class="project-card slot-back" href="#" target="_blank" rel="noopener noreferrer" aria-label="Project"></a>
+          <a class="project-card slot-peek" href="#" target="_blank" rel="noopener noreferrer" aria-label="Project"></a>
+        </div>
+        <div class="project-footer">
+          <div class="project-title">Projects</div>
+          <div class="project-dots" id="projectDots"></div>
+        </div>
+      </div>
+      ` : ""}
       <div class="grid" data-page="${p}"></div>
     </div>
   `;
@@ -52,6 +73,12 @@ function openApp(app) {
   if (!app?.url) return;
   window.open(app.url, "_blank", "noopener,noreferrer");
 }
+
+const PROJECTS = [
+  { title: "Valorant ESports Dashboard", img: "./icons/vlr.png", url: "https://example.com" },
+  { title: "Project Two", img: "./icons/project-2.jpg", url: "https://example.com" },
+  { title: "Project Three", img: "./icons/project-3.jpg", url: "https://example.com" },
+];
 
 function labelScale(label) {
   const text = (label || "").trim();
@@ -91,6 +118,81 @@ function renderGridApps() {
 
 function isRailTrue(v){
   return v === true || v === "true" || v === 1 || v === "1";
+}
+
+function renderProjectsWidget() {
+  const widget = document.getElementById("projectsWidget");
+  if (!widget || PROJECTS.length === 0) return;
+
+  const cards = [
+    widget.querySelector(".slot-main"),
+    widget.querySelector(".slot-back"),
+    widget.querySelector(".slot-peek"),
+  ];
+  if (cards.some(c => !c)) return;
+
+  const dotsWrap = document.getElementById("projectDots");
+  if (dotsWrap) {
+    dotsWrap.innerHTML = "";
+    PROJECTS.forEach((_, i) => {
+      const d = document.createElement("span");
+      d.className = "project-dot" + (i === 0 ? " active" : "");
+      dotsWrap.appendChild(d);
+    });
+  }
+
+  let index = 0;
+
+  function setCard(card, proj) {
+    card.style.backgroundImage = `url("${proj.img}")`;
+    card.href = proj.url || "#";
+    card.setAttribute("aria-label", proj.title || "Project");
+    card.title = proj.title || "Project";
+  }
+
+  function updateAll() {
+    setCard(cards[0], PROJECTS[index % PROJECTS.length]);       // main
+    setCard(cards[1], PROJECTS[(index + 1) % PROJECTS.length]); // back
+    setCard(cards[2], PROJECTS[(index + 2) % PROJECTS.length]); // peek
+    if (dotsWrap) {
+      const dots = Array.from(dotsWrap.children);
+      dots.forEach((d, i) => d.classList.toggle("active", i === (index % PROJECTS.length)));
+    }
+  }
+
+  updateAll();
+
+  function rotate() {
+    // back -> main, peek -> back, main -> peek
+    cards.forEach((card) => {
+      if (card.classList.contains("slot-main")) {
+        card.classList.remove("slot-main");
+        card.classList.add("slot-peek");
+      } else if (card.classList.contains("slot-back")) {
+        card.classList.remove("slot-back");
+        card.classList.add("slot-main");
+      } else if (card.classList.contains("slot-peek")) {
+        card.classList.remove("slot-peek");
+        card.classList.add("slot-back");
+      }
+    });
+
+    index = (index + 1) % PROJECTS.length;
+
+    // update the new peek card with the next project
+    const peek = widget.querySelector(".slot-peek");
+    if (peek) {
+      const nextProj = PROJECTS[(index + 2) % PROJECTS.length];
+      setCard(peek, nextProj);
+    }
+
+    if (dotsWrap) {
+      const dots = Array.from(dotsWrap.children);
+      dots.forEach((d, i) => d.classList.toggle("active", i === (index % PROJECTS.length)));
+    }
+  }
+
+  setInterval(rotate, 4500);
 }
 
 function renderRailApps() {
@@ -171,3 +273,4 @@ setInterval(updateClock, 15000);
 
 renderGridApps();
 renderRailApps();
+renderProjectsWidget();
