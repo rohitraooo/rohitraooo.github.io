@@ -1,7 +1,7 @@
-import { APPS } from "./apps/apps.js?v=21";
+import { APPS } from "./apps/apps.js?v=23";
 import { CURRENT_WORK } from "./apps/currentWork.js?v=1";
 
-console.log("[home] app.js v21 loaded");
+console.log("[home] app.js v23 loaded");
 
 const pager = document.getElementById("pager");
 const dotsWrap = document.getElementById("dots");
@@ -11,6 +11,7 @@ const lockScreen = document.getElementById("lockScreen");
 const unlockControl = document.getElementById("unlockControl");
 const lockButton = document.getElementById("lockButton");
 const currentWorkList = document.getElementById("currentWorkList");
+const lockBubbles = document.getElementById("lockBubbles");
 
 const FORCE_MIN_PAGES = 3;
 
@@ -85,6 +86,73 @@ function escapeHtml(value) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+function randomBetween(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+function randomInt(min, max) {
+  return Math.floor(randomBetween(min, max + 1));
+}
+
+function pick(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function renderLockBubbles() {
+  if (!lockBubbles) return;
+
+  const themes = [
+    {
+      bg: "linear-gradient(145deg, rgba(190,255,236,.95), rgba(30,169,184,.88))",
+      shadow: "inset -18px -18px 48px rgba(0,70,150,.28), inset 14px 14px 48px rgba(255,255,255,.42)"
+    },
+    {
+      bg: "linear-gradient(155deg, rgba(179,218,255,.98), rgba(38,94,218,.86) 58%, rgba(9,31,107,.96))",
+      shadow: "inset -18px -24px 54px rgba(3,18,70,.38), inset 10px 10px 42px rgba(255,255,255,.45)"
+    },
+    {
+      bg: "linear-gradient(155deg, rgba(168,239,255,.9), rgba(22,165,213,.72))",
+      shadow: "inset 12px 16px 40px rgba(255,255,255,.34), inset -14px -18px 40px rgba(0,55,130,.28)"
+    },
+    {
+      bg: "linear-gradient(145deg, rgba(245,255,250,.86), rgba(111,203,255,.66))",
+      shadow: "inset 14px 14px 44px rgba(255,255,255,.38), inset -16px -20px 46px rgba(18,67,142,.24)"
+    }
+  ];
+
+  const count = randomInt(3, 7);
+  lockBubbles.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    const bubble = document.createElement("span");
+    const theme = pick(themes);
+    const size = randomBetween(28, 88);
+    const left = randomBetween(-24, 96);
+    const top = randomBetween(-24, 92);
+    const driftX = randomBetween(-14, 14);
+    const driftY = randomBetween(-10, 10);
+
+    bubble.className = "lock-bubble";
+    bubble.style.setProperty("--bubble-size", `min(${size}vw, ${Math.round(size * 8)}px)`);
+    bubble.style.setProperty("--bubble-left", `${left}vw`);
+    bubble.style.setProperty("--bubble-top", `${top}vh`);
+    bubble.style.setProperty("--bubble-opacity", randomBetween(0.38, 0.86).toFixed(2));
+    bubble.style.setProperty("--bubble-bg", theme.bg);
+    bubble.style.setProperty("--bubble-shadow", theme.shadow);
+    bubble.style.setProperty("--bubble-duration", `${randomBetween(16, 30).toFixed(1)}s`);
+    bubble.style.setProperty("--bubble-delay", `${randomBetween(-10, 0).toFixed(1)}s`);
+    bubble.style.setProperty("--bubble-drift-x", `${driftX.toFixed(1)}vw`);
+    bubble.style.setProperty("--bubble-drift-y", `${driftY.toFixed(1)}vh`);
+    bubble.style.setProperty("--bubble-drift-x-end", `${(driftX * randomBetween(1.35, 1.9)).toFixed(1)}vw`);
+    bubble.style.setProperty("--bubble-drift-y-end", `${(driftY * randomBetween(1.2, 1.7)).toFixed(1)}vh`);
+    bubble.style.setProperty("--bubble-scale-start", randomBetween(0.92, 1).toFixed(2));
+    bubble.style.setProperty("--bubble-scale-mid", randomBetween(1.01, 1.08).toFixed(2));
+    bubble.style.setProperty("--bubble-scale-end", randomBetween(0.94, 1.03).toFixed(2));
+
+    lockBubbles.appendChild(bubble);
+  }
 }
 
 const PROJECTS = [
@@ -373,3 +441,4 @@ renderGridApps();
 renderRailApps();
 renderProjectsWidget();
 renderCurrentWork();
+renderLockBubbles();

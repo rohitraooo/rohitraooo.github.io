@@ -68,9 +68,6 @@ body{
   overflow: hidden;
   color: rgba(255,255,255,.95);
   background:
-    radial-gradient(680px 720px at 28% 56%, rgba(139, 245, 216, .92) 0 34%, transparent 35%),
-    radial-gradient(520px 700px at 64% 23%, rgba(147, 186, 255, .95) 0 30%, transparent 31%),
-    radial-gradient(420px 640px at 87% 73%, rgba(74, 189, 238, .9) 0 38%, transparent 39%),
     linear-gradient(140deg, #d7fbff 0%, #f6fbef 39%, #244dce 62%, #071b68 100%);
   transform: translateY(0);
   transition: transform 680ms cubic-bezier(.2,.8,.2,1), opacity 520ms ease, visibility 520ms ease;
@@ -81,26 +78,43 @@ body{
 .lock-screen::after{
   content:"";
   position:absolute;
-  border-radius: 50%;
+  inset:0;
+  z-index:1;
   pointer-events:none;
 }
 
 .lock-screen::before{
-  width: min(88vw, 720px);
-  height: min(88vw, 720px);
-  left: -14vw;
-  bottom: 8vh;
-  background: linear-gradient(145deg, rgba(190,255,236,.9), rgba(30,169,184,.88));
-  box-shadow: inset -18px -18px 48px rgba(0,70,150,.28), inset 14px 14px 48px rgba(255,255,255,.42);
+  background:
+    radial-gradient(760px 540px at 32% 30%, rgba(255,255,255,.35), transparent 62%),
+    radial-gradient(700px 520px at 74% 68%, rgba(0,32,120,.22), transparent 66%);
 }
 
 .lock-screen::after{
-  width: min(62vw, 560px);
-  height: min(92vw, 780px);
-  right: 13vw;
-  top: -18vh;
-  background: linear-gradient(155deg, rgba(179,218,255,.98), rgba(38,94,218,.86) 58%, rgba(9,31,107,.96));
-  box-shadow: inset -18px -24px 54px rgba(3,18,70,.38), inset 10px 10px 42px rgba(255,255,255,.45);
+  background:
+    linear-gradient(90deg, rgba(247,255,250,.22), transparent 38%),
+    radial-gradient(900px 700px at 50% 112%, rgba(0,0,0,.28), transparent 68%);
+}
+
+.lock-bubbles{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.lock-bubble{
+  position:absolute;
+  aspect-ratio:1;
+  border-radius:50%;
+  width: var(--bubble-size);
+  left: var(--bubble-left);
+  top: var(--bubble-top);
+  opacity: var(--bubble-opacity);
+  background: var(--bubble-bg);
+  box-shadow: var(--bubble-shadow);
+  animation: bubble-phase var(--bubble-duration) ease-in-out var(--bubble-delay) infinite alternate;
+  will-change: transform, opacity;
 }
 
 body.unlocked .lock-screen{
@@ -1051,5 +1065,26 @@ body.home-entering .apps-button{ animation-delay: 430ms; }
     opacity:.68;
     transform:scale(.86);
     box-shadow: 0 0 0 6px rgba(64,233,135,0), 0 0 14px rgba(64,233,135,.45);
+  }
+}
+
+@keyframes bubble-phase{
+  0%{
+    opacity:calc(var(--bubble-opacity) * .78);
+    transform:translate3d(0, 0, 0) scale(var(--bubble-scale-start));
+  }
+  48%{
+    opacity:var(--bubble-opacity);
+    transform:translate3d(var(--bubble-drift-x), var(--bubble-drift-y), 0) scale(var(--bubble-scale-mid));
+  }
+  100%{
+    opacity:calc(var(--bubble-opacity) * .84);
+    transform:translate3d(var(--bubble-drift-x-end), var(--bubble-drift-y-end), 0) scale(var(--bubble-scale-end));
+  }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lock-bubble{
+    animation:none;
   }
 }
