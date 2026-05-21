@@ -20,16 +20,6 @@ export const APPS = [
     railOrder: 2
   },
   {
-    id: "spotify",
-    label: "Spotify",
-    page: 2,
-    iconClass: "spotify",
-    iconImg: "./icons/spotify.png",
-    url: "https://open.spotify.com/user/fwjlrh0kow8pi83f5ch4l2j7i",
-    rail: true,
-    railOrder: 3
-  },
-  {
     id: "ey",
     label: "EY",
     page: 2,
@@ -58,7 +48,7 @@ export const APPS = [
     label: "Resume",
     page: 2,
     iconClass: "resume",
-    iconImg: "./icons/resume.png",
+    url: "./resume.pdf",
     rail: false
   }
 ];

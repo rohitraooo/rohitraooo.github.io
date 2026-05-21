@@ -1,6 +1,7 @@
-import { APPS } from "./apps/apps.js?v=9";
+import { APPS } from "./apps/apps.js?v=21";
+import { CURRENT_WORK } from "./apps/currentWork.js?v=1";
 
-console.log("[home] app.js v9 loaded");
+console.log("[home] app.js v21 loaded");
 
 const pager = document.getElementById("pager");
 const dotsWrap = document.getElementById("dots");
@@ -8,6 +9,8 @@ const railWrap = document.getElementById("railApps");
 const homeButton = document.getElementById("homeButton");
 const lockScreen = document.getElementById("lockScreen");
 const unlockControl = document.getElementById("unlockControl");
+const lockButton = document.getElementById("lockButton");
+const currentWorkList = document.getElementById("currentWorkList");
 
 const FORCE_MIN_PAGES = 3;
 
@@ -74,6 +77,14 @@ function imgTag(app, cls) {
 function openApp(app) {
   if (!app?.url) return;
   window.open(app.url, "_blank", "noopener,noreferrer");
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 const PROJECTS = [
@@ -263,18 +274,16 @@ if (homeButton) {
 
 // Clock
 function updateClock() {
-  const t = document.getElementById("time");
   const d = new Date();
   const hh = d.getHours();
   const mm = String(d.getMinutes()).padStart(2, "0");
-  const railHours = String(hh).padStart(2, "0");
-  if (t) t.textContent = `${railHours}:${mm}`;
 
   const lockTime = document.getElementById("lockTime");
   const lockDate = document.getElementById("lockDate");
   if (lockTime) {
     const displayHour = hh % 12 || 12;
-    lockTime.textContent = `${displayHour}:${mm}`;
+    lockTime.setAttribute("aria-label", `${displayHour}:${mm}`);
+    lockTime.innerHTML = `<span>${displayHour}</span><span class="lock-time-colon" aria-hidden="true"></span><span>${mm}</span>`;
   }
   if (lockDate) {
     lockDate.textContent = d.toLocaleDateString("en-US", {
@@ -284,18 +293,65 @@ function updateClock() {
     });
   }
 }
+
+function renderCurrentWork() {
+  if (!currentWorkList) return;
+
+  currentWorkList.innerHTML = "";
+
+  for (const item of CURRENT_WORK) {
+    const element = document.createElement(item.url ? "a" : "article");
+    element.className = "work-notification";
+
+    if (item.url) {
+      element.href = item.url;
+      element.target = "_blank";
+      element.rel = "noopener noreferrer";
+    }
+
+    const icon = item.iconImg
+      ? `<img src="${escapeHtml(item.iconImg)}" alt="" aria-hidden="true" loading="eager" />`
+      : `<span aria-hidden="true">${escapeHtml((item.title || "W")[0]).toUpperCase()}</span>`;
+
+    element.innerHTML = `
+      <div class="work-notification-icon">${icon}</div>
+      <div class="work-notification-copy">
+        <strong>${escapeHtml(item.title)}</strong>
+        <p>${escapeHtml(item.description)}</p>
+      </div>
+    `;
+
+    currentWorkList.appendChild(element);
+  }
+}
 updateClock();
 setInterval(updateClock, 15000);
 
 function unlockSite() {
+  document.body.classList.remove("home-entering");
   document.body.classList.add("unlocked");
+  window.requestAnimationFrame(() => {
+    document.body.classList.add("home-entering");
+  });
   window.setTimeout(() => {
     if (lockScreen) lockScreen.setAttribute("aria-hidden", "true");
   }, 700);
+  window.setTimeout(() => {
+    document.body.classList.remove("home-entering");
+  }, 1400);
+}
+
+function lockSite() {
+  document.body.classList.remove("unlocked", "home-entering");
+  if (lockScreen) lockScreen.setAttribute("aria-hidden", "false");
 }
 
 if (unlockControl) {
   unlockControl.addEventListener("click", unlockSite);
+}
+
+if (lockButton) {
+  lockButton.addEventListener("click", lockSite);
 }
 
 if (lockScreen) {
@@ -316,3 +372,4 @@ if (lockScreen) {
 renderGridApps();
 renderRailApps();
 renderProjectsWidget();
+renderCurrentWork();

@@ -9,22 +9,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./styles.css?v=10" />
+  <link rel="stylesheet" href="./styles.css?v=21" />
 </head>
 <body>
   <section class="lock-screen" id="lockScreen" aria-label="Lock screen">
-    <div class="lock-status">
-      <div class="lock-dynamic-island" aria-hidden="true"></div>
-      <div class="lock-system-icons" aria-hidden="true">
-        <div class="lock-bars"><span></span><span></span><span></span><span></span></div>
-        <div class="lock-wifi"></div>
-        <div class="lock-battery"><span></span></div>
-      </div>
-    </div>
-
     <div class="lock-time-wrap">
       <div class="lock-date" id="lockDate">Tuesday, May 19</div>
-      <div class="lock-time" id="lockTime">9:41</div>
+      <div class="lock-time" id="lockTime" aria-label="9:41">
+        <span>9</span><span class="lock-time-colon" aria-hidden="true"></span><span>41</span>
+      </div>
+      <div class="lock-location" aria-label="Current location">
+        <span class="lock-location-dot" aria-hidden="true"></span>
+        Ashburn, VA
+      </div>
     </div>
 
     <div class="lock-content" aria-label="Quick facts about Rohit">
@@ -34,7 +31,8 @@
       <div class="lock-widgets">
         <div class="lock-widget large">
           <span class="lock-widget-label">Rohit Rao</span>
-          <strong>Developer building clean, useful digital experiences.</strong>
+          <strong>Software Engineer at Collins Aerospace</strong>
+          <span class="lock-widget-subtitle">Interests: Software, AI/ML, Product Development</span>
         </div>
         <div class="lock-widget">
           <span class="lock-widget-label">Focus</span>
@@ -42,31 +40,25 @@
         </div>
         <div class="lock-widget">
           <span class="lock-widget-label">Links</span>
-          <strong>GitHub, LinkedIn, Spotify, and projects inside</strong>
+          <strong>GitHub, LinkedIn, and projects inside</strong>
         </div>
       </div>
     </div>
 
-    <div class="lock-actions" aria-hidden="true">
-      <div class="lock-action-btn flashlight"></div>
-      <div class="lock-action-btn camera"></div>
+    <div class="lock-notifications" aria-label="Currently working on">
+      <div class="lock-notification-title">Currently Working On</div>
+      <div class="lock-notification-list" id="currentWorkList"></div>
     </div>
 
     <button class="unlock-control" id="unlockControl" type="button" aria-label="Unlock and enter site">
-      <span>Swipe up to unlock</span>
+      <span>Swipe up for more</span>
       <i></i>
     </button>
   </section>
 
   <aside class="status-rail">
     <div class="status-top">
-      <div class="time" id="time">13:02</div>
-      <div class="net-row">
-        <div class="signal">
-          <span></span><span></span><span></span><span></span>
-        </div>
-        <div class="network">LTE</div>
-      </div>
+      <button class="rail-lock-button" id="lockButton" type="button" aria-label="Lock screen"></button>
     </div>
 
     <div class="status-icons" id="railApps"></div>
@@ -79,6 +71,6 @@
   <main class="pager" id="pager"></main>
   <nav class="dots" id="dots"></nav>
 
-  <script type="module" src="./app.js?v=10"></script>
+  <script type="module" src="./app.js?v=21"></script>
 </body>
 </html>
