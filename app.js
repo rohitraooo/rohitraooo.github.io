@@ -6,6 +6,8 @@ const pager = document.getElementById("pager");
 const dotsWrap = document.getElementById("dots");
 const railWrap = document.getElementById("railApps");
 const homeButton = document.getElementById("homeButton");
+const lockScreen = document.getElementById("lockScreen");
+const unlockControl = document.getElementById("unlockControl");
 
 const FORCE_MIN_PAGES = 3;
 
@@ -262,14 +264,54 @@ if (homeButton) {
 // Clock
 function updateClock() {
   const t = document.getElementById("time");
-  if (!t) return;
   const d = new Date();
   const hh = d.getHours();
   const mm = String(d.getMinutes()).padStart(2, "0");
-  t.textContent = `${hh}:${mm}`;
+  const railHours = String(hh).padStart(2, "0");
+  if (t) t.textContent = `${railHours}:${mm}`;
+
+  const lockTime = document.getElementById("lockTime");
+  const lockDate = document.getElementById("lockDate");
+  if (lockTime) {
+    const displayHour = hh % 12 || 12;
+    lockTime.textContent = `${displayHour}:${mm}`;
+  }
+  if (lockDate) {
+    lockDate.textContent = d.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric"
+    });
+  }
 }
 updateClock();
 setInterval(updateClock, 15000);
+
+function unlockSite() {
+  document.body.classList.add("unlocked");
+  window.setTimeout(() => {
+    if (lockScreen) lockScreen.setAttribute("aria-hidden", "true");
+  }, 700);
+}
+
+if (unlockControl) {
+  unlockControl.addEventListener("click", unlockSite);
+}
+
+if (lockScreen) {
+  let startY = null;
+
+  lockScreen.addEventListener("pointerdown", (event) => {
+    startY = event.clientY;
+  });
+
+  lockScreen.addEventListener("pointerup", (event) => {
+    if (startY === null) return;
+    const distance = startY - event.clientY;
+    startY = null;
+    if (distance > 70) unlockSite();
+  });
+}
 
 renderGridApps();
 renderRailApps();
